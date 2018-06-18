@@ -1,0 +1,43 @@
+eq_clean_data <- function(fileLink, fileName = 'signif.txt'){
+  
+  cleanData <- suppressMessages(readr::read_tsv(paste0(fileLink, fileName)))
+  
+  # LATITUDE and LONGITUDE to numeric
+  cleanData <- cleanData %>% dplyr::mutate(LATITUDE = as.numeric(LATITUDE),
+                                           LONGITUDE = as.numeric(LONGITUDE))
+
+  #
+  # more cleaning
+  #
+  cleanData <- cleanData %>% dplyr::mutate(EPOCH = ifelse(YEAR < 0, 'BC', 'AD')) %>% # epoch: AD or BC, no negative years
+    dplyr::mutate(YEAR = as.character(YEAR)) %>%
+    dplyr::mutate(MONTH = ifelse(is.na(MONTH), 1, MONTH)) %>% # set NAs to 1 for MONTH and DAY
+    dplyr::mutate(DAY = ifelse(is.na(DAY), 1, DAY)) %>% 
+    dplyr::mutate(YEAR = sub('^-', '', YEAR)) %>% 
+    tidyr::unite('DATE', YEAR, MONTH, DAY, sep = '-') %>% 
+    dplyr::mutate(DATE = as.Date(DATE, '%Y-%m-%d')) %>% 
+    dplyr::mutate(LOCATION_NAME = eq_location_clean(LOCATION_NAME))
+    
+  cleanData
+}
+
+#alternative regex [aA-zZ].*
+eq_location_clean <- function(locCol){
+    stringr::str_extract(tolower(locCol), '[^:]+') %>% toTitleCase()
+}
+
+eq_map <- function(data = data, annot_col = "DATE"){
+  leaflet::leaflet() %>%
+  leaflet::addTiles() %>% 
+  leaflet::addCircleMarkers(data = data, lng = ~LONGITUDE,
+                     lat = ~LATITUDE, radius = ~EQ_PRIMARY,
+                     popup = as.formula(paste0('~','as.character(',annot_col,')')))
+}
+
+eq_create_label <- function(loc, magnitude, deaths){
+  paste0("<b>Location:</b> ", as.character(loc), 
+        "<br />", 
+        "<b>Magnitude:</b> ", as.character(magnitude),
+        "<br />",
+        "<b>Total deaths:</b> ", as.character(deaths))
+}

@@ -1,0 +1,109 @@
+---
+title: "Analyzing earthquake data using eqr"
+author: "Slava Kohut"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Analyzing earthquake data using eqr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(eqr)
+library(dplyr)
+library(ggplot2)
+data("eq_data")
+```
+
+## Intro
+
+The _eqr_ package is a set of analytical tools designed for
+working with the _NOAA Significant Earthquakes dataset_.
+The workflow basically consists of the following steps:
+
+- load and clean the data
+- analyze the data using timeline plots and maps
+
+In what follows, we will illustrate each of these steps by providing specific examples 
+that feature _eqr_ functions. 
+
+## Data cleaning
+
+This step is performed using the `eq_clean_data`. The user needs to provide 
+a path to the data set and the corresponding file name:
+```{r, eval = FALSE}
+eq_data <- eq_clean_data('./', 'noaa-data-set.txt')
+```
+As a result, one obtains a clean, ready-to-use data set that is compatible with plotting
+and mapping functions. The `eq_clean_data` includes a call to `eq_location_clean` whose goal
+is to extract a country name from the location string. The function is vectorized.
+```{r}
+eq_location_clean('CANADA: OTTAWA')
+eq_location_clean(c('CANADA: OTTAWA', 'COLOMBIA: BOGOTA'))
+```
+
+## Mapping
+
+Earthquake maps can be produced using the `eq_map` function.
+
+```{r, fig.width = 7, fig.height = 5}
+eq_data %>% filter(COUNTRY == 'COLOMBIA') %>% eq_map()
+```
+
+These maps are fully interactive and are annotated using earthquake dates by default.
+Pointers' labels can be changed by supplying a column name that is used for generating a
+new set of labels (the `annot_col` parameter). Let's use the earthquake magnitude for annotations:
+
+```{r, fig.width = 7, fig.height = 5}
+eq_data %>% filter(COUNTRY == 'COLOMBIA') %>% eq_map(annot_col = 'EQ_PRIMARY')
+```
+
+A more informative label (location + magnitude + the number of deaths) can be produced using 
+the `eq_create_label` function:
+
+```{r, fig.width = 7, fig.height = 5}
+eq_data %>% filter(COUNTRY == 'COLOMBIA' & DATE > as.Date('1990-01-01')) %>%
+  mutate(labels = eq_create_label(COUNTRY, EQ_PRIMARY, DEATHS)) %>%
+  eq_map(annot_col = 'labels')
+```
+
+## Timeline plots
+
+Timeline plots are a convenient way to visualize the earthquake sequential order along with
+other important information for a particular country. These plots are generated using 
+two _ggplot2_ geom functions: (i) `geom_timeline` and (ii) `geom_timeline_label`. 
+As an example, let's generate a timeline plot for earthquakes happened in Italy.
+The point size and color will be used for coding the earthquake magnitude and the number of deaths,
+respectively.
+
+```{r, fig.width = 7, fig.height = 5}
+ggplot(data = eq_data %>% filter(COUNTRY == "ITALY"),
+       aes(x = DATE, size = EQ_PRIMARY, color = TOTAL_DEATHS,
+           xmin = as.Date('1950-01-01'),
+           xmax = as.Date('2015-01-01'))) +
+ geom_timeline() +
+ theme_eq
+```
+
+Note that the data for more than one country can be plotted. Also, it is important to note that
+the input data can be pre-filtered using the `xmin` and `xmax` parameters. The number of output points'
+labels is controlled by the 'nmax' parameter which refers to the eathquake magnitude sorted in a descending
+order.
+
+```{r, fig.width = 7, fig.height = 5}
+ggplot(data = eq_data %>% filter(COUNTRY %in% c('COLOMBIA', 'MEXICO', 'USA')),
+       aes(x = DATE, y = COUNTRY, size = EQ_PRIMARY,
+           color = TOTAL_DEATHS, xmin = as.Date('1970-01-01'),
+           xmax = as.Date('2015-01-01'))) +
+  geom_timeline_label(aes(label = as.character(DATE)), nmax = 2) +
+  geom_timeline() +
+  theme_eq
+```

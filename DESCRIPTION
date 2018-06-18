@@ -1,0 +1,22 @@
+Package: eqr
+Title: tools for working with the NOAA Significant Earthquakes dataset.
+Version: 1.0.0.0
+Authors@R: person("Slava", "Kohut", email = "svkohut@gmail.com", role = c("aut", "cre"))
+Description: a set of tools for visualizing earthquake data from the
+	NOAA Significant Earthquake dataset.
+Depends: R (>= 3.4.1)
+Imports:
+	dplyr (>= 0.7.4),
+	ggplot2 (>= 2.2.1),
+	stringr (>= 1.3.0),
+	tidyr (>= 0.8.0),
+	leaflet (>= 2.0.1),
+	readr (>= 1.1.1)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
