@@ -1,6 +1,6 @@
-# eqr - a package for analysis of earthquake data
+# eqr - analysis of earthquake data
 
-__eqr__ is a toolbox for analyzing the NOAA significant earthquakes dataset.
+__eqr__ is a toolbox for analyzing the _NOAA Significant Earthquakes dataset_.
 
 ## Installation
 
