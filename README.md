@@ -1,5 +1,7 @@
 # eqr - analysis of earthquake data
 
+[![Travis-CI Build Status](https://travis-ci.org/slava-kohut/R-Capstone-SoftDev.svg?branch=master)](https://travis-ci.org/slava-kohut/R-Capstone-SoftDev)
+
 __eqr__ is a toolbox for analyzing the _NOAA Significant Earthquakes dataset_.
 
 ## Installation
