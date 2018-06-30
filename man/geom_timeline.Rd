@@ -8,29 +8,50 @@ geom_timeline(mapping = NULL, data = NULL, position = "identity",
   na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, ...)
 }
 \arguments{
-\item{xmin}{a date. The lower bound of the date interval used for subsetting the NOAA data.}
+\item{mapping}{mapping}
 
-\item{xmax}{a date. The upper bound of the date interval used for subsetting the NOAA data.}
+\item{data}{data}
 
-\item{nmax}{an integer. Top earthquakes with respect to the magnitude. These earthquakes are
-labelled on the plot.}
+\item{position}{Position adjustment, either as a string, or the result of
+a call to a position adjustment function.}
 
-\item{label}{a character vector. A column in the NOAA dataset used for labelling the data points.}
+\item{na.rm}{remove NAs}
+
+\item{show.legend}{logical. Should this layer be included in the legends?
+`NA`, the default, includes if any aesthetics are mapped.
+`FALSE` never includes, and `TRUE` always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
+
+\item{inherit.aes}{If `FALSE`, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. [borders()].}
+
+\item{...}{other parameter}
 }
 \description{
 \code{geom_timeline} is used to visualize earthquake occurence, intensity,
   the number of deaths caused, and other parameters.
 }
+\details{
+\describe{
+It uses the following additional parameters:
+\item{xmin}{a date. The lower bound of the date interval used for subsetting the NOAA data.}
+\item{xma}{a date. The upper bound of the date interval used for subsetting the NOAA data.}
+}
+}
 \examples{
 \donttest{
 data("eq_data")
-ggplot(data = eq_data \%>\% filter(COUNTRY == "ITALY"),
+ggplot() +
+geom_timeline(data = eq_data \%>\% filter(COUNTRY == "ITALY"),
        aes(x = DATE, size = EQ_PRIMARY, color = TOTAL_DEATHS,
            xmin = as.Date('1950-01-01'),
            xmax = as.Date('2015-01-01'))) +
- geom_timeline() +
  theme_eq
 }
+
 \donttest{
 data("eq_data")
 ggplot(data = eq_data \%>\% filter(COUNTRY \%in\% c('COLOMBIA', 'MEXICO', 'USA')),
@@ -41,4 +62,5 @@ ggplot(data = eq_data \%>\% filter(COUNTRY \%in\% c('COLOMBIA', 'MEXICO', 'USA')
   geom_timeline() +
   theme_eq
 }
+
 }

@@ -12,3 +12,4 @@ stat_timeline(mapping = NULL, data = NULL, geom = NULL,
 A stat function that pre-processes data for \code{geom_timeline} and
  \code{geom_timeline_label}.
 }
+\keyword{internal}

@@ -5,8 +5,6 @@
 #'
 #' @import ggplot2
 #'
-#' @export
-#'
 StatTimeline <- ggproto("StatTimeline", Stat,
                         required_aes = c("x", "xmin", "xmax"),
 
@@ -26,10 +24,9 @@ StatTimeline <- ggproto("StatTimeline", Stat,
 #' A stat function that pre-processes data for \code{geom_timeline} and
 #'  \code{geom_timeline_label}.
 #'
+#' @keywords internal
+#'
 #' @import ggplot2
-#'
-#' @export
-#'
 stat_timeline <- function(mapping = NULL, data = NULL, geom = NULL,
                            position = "identity", na.rm = FALSE, show.legend = NA,
                            inherit.aes = TRUE, ...) {
@@ -50,8 +47,6 @@ stat_timeline <- function(mapping = NULL, data = NULL, geom = NULL,
 #' A geom object used with \code{geom_timeline}.
 #'
 #' @import ggplot2
-#'
-#' @export
 #'
 GeomTimeline <- ggproto("GeomTimeline", Geom,
                            required_aes = c("x", "xmin", "xmax"),
@@ -94,22 +89,39 @@ GeomTimeline <- ggproto("GeomTimeline", Geom,
 #' \code{geom_timeline} is used to visualize earthquake occurence, intensity,
 #'   the number of deaths caused, and other parameters.
 #'
-#' @param xmin a date. The lower bound of the date interval used for subsetting the NOAA data.
-#' @param xmax a date. The upper bound of the date interval used for subsetting the NOAA data.
-#' @param nmax an integer. Top earthquakes with respect to the magnitude. These earthquakes are
-#'   labelled on the plot.
-#' @param label a character vector. A column in the NOAA dataset used for labelling the data points.
+#' \describe{
+#' It uses the following additional parameters:
+#' \item{xmin}{a date. The lower bound of the date interval used for subsetting the NOAA data.}
+#' \item{xma}{a date. The upper bound of the date interval used for subsetting the NOAA data.}
+#' }
+#'
+#' @param position Position adjustment, either as a string, or the result of
+#'  a call to a position adjustment function.
+#' @param show.legend logical. Should this layer be included in the legends?
+#'   `NA`, the default, includes if any aesthetics are mapped.
+#'   `FALSE` never includes, and `TRUE` always includes.
+#'   It can also be a named logical vector to finely select the aesthetics to
+#'   display.
+#' @param inherit.aes If `FALSE`, overrides the default aesthetics,
+#'   rather than combining with them. This is most useful for helper functions
+#'   that define both data and aesthetics and shouldn't inherit behaviour from
+#'   the default plot specification, e.g. [borders()].
+#' @param mapping mapping
+#' @param data data
+#' @param na.rm remove NAs
+#' @param ... other parameter
 #'
 #' @examples
 #' \donttest{
 #' data("eq_data")
-#' ggplot(data = eq_data %>% filter(COUNTRY == "ITALY"),
+#' ggplot() +
+#' geom_timeline(data = eq_data %>% filter(COUNTRY == "ITALY"),
 #'        aes(x = DATE, size = EQ_PRIMARY, color = TOTAL_DEATHS,
 #'            xmin = as.Date('1950-01-01'),
 #'            xmax = as.Date('2015-01-01'))) +
-#'  geom_timeline() +
 #'  theme_eq
 #' }
+#'
 #' \donttest{
 #' data("eq_data")
 #' ggplot(data = eq_data %>% filter(COUNTRY %in% c('COLOMBIA', 'MEXICO', 'USA')),
@@ -120,6 +132,7 @@ GeomTimeline <- ggproto("GeomTimeline", Geom,
 #'   geom_timeline() +
 #'   theme_eq
 #' }
+#'
 #' @import ggplot2
 #'
 #' @export
@@ -145,8 +158,6 @@ geom_timeline <- function(mapping = NULL, data = NULL,
 #'
 #' @import ggplot2
 #'
-#' @export
-#
 GeomTimelineLabel <- ggproto("GeomTimeline", Geom,
                                  required_aes = c("x", "xmin", "xmax", "label"),
 
@@ -184,9 +195,29 @@ GeomTimelineLabel <- ggproto("GeomTimeline", Geom,
 #'
 #' \code{geom_timeline_label} generates labels for earthquakes on a timeline plot. Used along with \code{geom_timeline}.
 #'
-#' @param nmax an integer. Top earthquakes with respect to the magnitude. These earthquakes are
-#'   labelled on the plot.
-#' @param label a character vector. A column in the NOAA dataset used for labelling the data points.
+#' \describe{
+#' It uses the following additional parameters:
+#' \item{nmax}{integer. Top earthquakes with respect to the magnitude. These earthquakes are
+#'   labelled on the plot.}
+#' \item{label}{character vector. A column in the NOAA dataset used for labelling the data points.
+#' }
+#'}
+#'
+#' @param position Position adjustment, either as a string, or the result of
+#'  a call to a position adjustment function.
+#' @param show.legend logical. Should this layer be included in the legends?
+#'   `NA`, the default, includes if any aesthetics are mapped.
+#'   `FALSE` never includes, and `TRUE` always includes.
+#'   It can also be a named logical vector to finely select the aesthetics to
+#'   display.
+#' @param inherit.aes If `FALSE`, overrides the default aesthetics,
+#'   rather than combining with them. This is most useful for helper functions
+#'   that define both data and aesthetics and shouldn't inherit behaviour from
+#'   the default plot specification, e.g. [borders()].
+#' @param mapping mapping
+#' @param data data
+#' @param na.rm remove NAs
+#' @param ... other parameters
 #'
 #' @examples
 #' \donttest{
@@ -221,6 +252,18 @@ geom_timeline_label <- function(mapping = NULL, data = NULL,
 #' A custom theme for timeline plots
 #'
 #' @import ggplot2
+#'
+#' @examples
+#' \donttest{
+#' data("eq_data")
+#' ggplot(data = eq_data %>% filter(COUNTRY %in% c('COLOMBIA', 'MEXICO', 'USA')),
+#'        aes(x = DATE, y = COUNTRY, size = EQ_PRIMARY,
+#'            color = TOTAL_DEATHS, xmin = as.Date('1970-01-01'),
+#'            xmax = as.Date('2015-01-01'))) +
+#'   geom_timeline_label(aes(label = as.character(DATE)), nmax = 2) +
+#'   geom_timeline() +
+#'   theme_eq
+#'}
 #'
 #' @export
 #'

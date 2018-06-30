@@ -11,4 +11,17 @@ theme_eq
 \description{
 A custom theme for timeline plots
 }
+\examples{
+\donttest{
+data("eq_data")
+ggplot(data = eq_data \%>\% filter(COUNTRY \%in\% c('COLOMBIA', 'MEXICO', 'USA')),
+       aes(x = DATE, y = COUNTRY, size = EQ_PRIMARY,
+           color = TOTAL_DEATHS, xmin = as.Date('1970-01-01'),
+           xmax = as.Date('2015-01-01'))) +
+  geom_timeline_label(aes(label = as.character(DATE)), nmax = 2) +
+  geom_timeline() +
+  theme_eq
+}
+
+}
 \keyword{datasets}

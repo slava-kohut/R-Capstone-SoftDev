@@ -8,13 +8,39 @@ geom_timeline_label(mapping = NULL, data = NULL, position = "identity",
   na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, ...)
 }
 \arguments{
-\item{nmax}{an integer. Top earthquakes with respect to the magnitude. These earthquakes are
-labelled on the plot.}
+\item{mapping}{mapping}
 
-\item{label}{a character vector. A column in the NOAA dataset used for labelling the data points.}
+\item{data}{data}
+
+\item{position}{Position adjustment, either as a string, or the result of
+a call to a position adjustment function.}
+
+\item{na.rm}{remove NAs}
+
+\item{show.legend}{logical. Should this layer be included in the legends?
+`NA`, the default, includes if any aesthetics are mapped.
+`FALSE` never includes, and `TRUE` always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
+
+\item{inherit.aes}{If `FALSE`, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. [borders()].}
+
+\item{...}{other parameters}
 }
 \description{
 \code{geom_timeline_label} generates labels for earthquakes on a timeline plot. Used along with \code{geom_timeline}.
+}
+\details{
+\describe{
+It uses the following additional parameters:
+\item{nmax}{integer. Top earthquakes with respect to the magnitude. These earthquakes are
+  labelled on the plot.}
+\item{label}{character vector. A column in the NOAA dataset used for labelling the data points.
+}
+}
 }
 \examples{
 \donttest{
