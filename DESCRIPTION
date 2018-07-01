@@ -4,7 +4,7 @@ Version: 1.0.0.0
 Authors@R: person("Slava", "Kohut", email = "svkohut@gmail.com", role = c("aut", "cre"))
 Description: a set of tools for visualizing earthquake data from the
 	NOAA Significant Earthquake dataset.
-Depends: R (>= 3.4.1)
+Depends: R (>= 3.4.0)
 Imports:
 	dplyr (>= 0.7.4),
 	ggplot2 (>= 2.2.1),
